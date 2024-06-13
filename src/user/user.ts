@@ -24,7 +24,6 @@ const db = Database.db;
 const saltRounds = parseInt(process.env.SALTROUNDS as string);
 
 export async function getUserDataFromEmail(email: string) {
-    console.log("email:", email)
     const minimumUserData = `
         SELECT 
             u.user_id,
@@ -41,14 +40,11 @@ export async function getUserDataFromEmail(email: string) {
     if (!(result.rows.length > 0)) throw Error("User doesn't exist.");
 
     const userInfo = result.rows[0];
-    console.log("data:", userInfo);
     return userInfo;
 }
 
 export async function getUserProfile(email: string) {
     const result = await db.query(userProfileQuery, [email]);
-    //console.log("email:", email);
-    //console.log("result:", result);
 
     if (!(result.rows.length > 0)) throw Error("Could not get user profile.");
 
@@ -144,7 +140,6 @@ export async function checkEditProfileValidation({ user_id, user_name, email, pa
     if (!textValidity) errors.user_name = "Invalid user name.";
 
     const sameCount: number = await isTextUnique(user_name, user_id);
-    console.log("same count", sameCount);
 
     if (sameCount > 0) {
         errors.user_name = "This user name is already used. Try different name.";
@@ -153,7 +148,6 @@ export async function checkEditProfileValidation({ user_id, user_name, email, pa
   
     if (Object.keys(errors).length > 0) return errors;
   
-    console.log("Passed all validations!");
     return {};
   }
 
@@ -163,7 +157,6 @@ async function isTextUnique(user_name: string, user_id: number) {
     if (!(result.rows.length > 0)) throw Error("Could not fetch the number of same text columns.");
 
     const sameCount: number = result.rows[0].count;
-    console.log(sameCount);
 
     return sameCount;
 }
@@ -195,7 +188,6 @@ export async function editProfile(prevEmail: string, updateData: EditProfileInfo
 
     await db.query(query, parameters)
 
-    console.log("Update Profile Completed.");
 }
 
 export async function addFavorites({ user_id, activity_id, is_favorited }: FavoritesInfo) {
@@ -222,7 +214,6 @@ export async function addFavorites({ user_id, activity_id, is_favorited }: Favor
 
     await db.query(query, parameters);
 
-    console.log("activity in user_favorites successfully updated")
 }
 
 export async function addPlaylist(playlist_titl: string, user_id: number){
@@ -231,7 +222,6 @@ export async function addPlaylist(playlist_titl: string, user_id: number){
 
     await db.query(query, [user_id, playlist_titl, date]);
 
-    console.log("New playlist created.")
 }
 
 //add activities into a playlist
@@ -250,8 +240,6 @@ export async function addActivitiesIntoPlaylist(activity_id_arr: number[], user_
     }
 
     await db.query(query, parameters);
-
-    console.log("activities added to a playlist.");
 }
 
 export async function removeProfile(user_id: number, email: string) {
@@ -272,8 +260,6 @@ export async function removeProfile(user_id: number, email: string) {
 
     await db.query(deleteFavQuery, [user_id]);
     await db.query(deleteProfileQuery, [user_id, email]);
-
-    console.log("deleted profile.")
 }
 
 export async function removeFavoriteActivity(user_id: number, activity_id: number) {
@@ -286,8 +272,6 @@ export async function removeFavoriteActivity(user_id: number, activity_id: numbe
             activity_id = $2
     `;
     await db.query(deleteUserActivityQuery, [user_id, activity_id]);
-
-    console.log("deleted favorite activity.")
 };
 
 export async function deletePlaylist(user_id: number, playlist_id: number){
@@ -296,15 +280,10 @@ export async function deletePlaylist(user_id: number, playlist_id: number){
 
     await db.query(activityDelete, [playlist_id]);
     await db.query(playlistDelete, [playlist_id, user_id]);
-
-    console.log('deleted playlist.')
 }
 
 export async function removeActivityFromPlaylist(playlist_id: number, activity_id: number){
-    console.log("activity_id:", activity_id)
     const query = removeActivityFromPlaylistQuery;
 
     await db.query(query, [activity_id, playlist_id]);
-
-    console.log("remove activity from playlist");
 }

@@ -10,7 +10,6 @@ export async function getTagId(tag: string) {
     `
 
     const result = await db.query(getTagIdQuery, [tag]);
-    console.log("result:", result.rows);
 
     if (result.rows.length === 0) {
         return 0;

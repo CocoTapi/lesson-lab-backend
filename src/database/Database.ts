@@ -8,7 +8,7 @@ export default class Database {
     static #db: pg.Client | null = null;
 
     public static get db(): pg.Client {
-        console.log(process.env.PG_USER);
+        console.log("database connected.");
         if (!Database.#db) {
             Database.#db = new pg.Client({
                 user: process.env.PG_USER,

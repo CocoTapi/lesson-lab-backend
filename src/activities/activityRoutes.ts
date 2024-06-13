@@ -58,7 +58,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/search', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
-    const id: number = parseInt(req.params.id);
+    //const id: number = parseInt(req.params.id);
     const searchTerm: string = req.body.searchTerm;
     
     let verifiedEmail;
@@ -78,11 +78,9 @@ router.post('/search', asyncHandler(async (req, res) => {
 router.post('/', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
-    const verifiedEmail = await checkAuth(method, authHeader);
-    console.log("Pass Authorization. verifiedEmail:", verifiedEmail);
+    await checkAuth(method, authHeader);
 
     const formData: ActivityFormInfo = req.body;
-    console.log(formData);
     const errors: ErrorMessage = await checkFormValidation(formData);
 
     if (Object.keys(errors).length > 0) {

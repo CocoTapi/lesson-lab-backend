@@ -7,7 +7,7 @@ import { isValidEmail, isValidPassword, isValidText } from "../util/validation";
 
 env.config();
 
-const redirectUrl = 'http://localhost:8080/auth/google';
+const redirectUrl = process.env.GOOGLE_REDIRECTURL;
 
 const oAuth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
@@ -52,7 +52,6 @@ export async function checkProfileValidation({ email, password, first_name, last
 
   if (Object.keys(errors).length > 0) return errors;
 
-  console.log("Passed all validations!");
   return {};
 }
 
@@ -74,8 +73,6 @@ export async function signUp({ email, password, first_name, last_name }: SignUpI
     "INSERT INTO users (email, password, first_name, last_name, created_date, last_update, user_name) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
     [email, hashResult, first_name, last_name, date, date, user_name]
   );
-
-  console.log(email, hashResult, first_name, last_name, date, date);
 }
 
 function createUserName(email: string) {
@@ -123,8 +120,6 @@ export async function oAuthLogin(){
   const authUrl = oAuth2Client.generateAuthUrl(domainRedirect);
   if(!authUrl) throw new Error ("Auth URL could not be generated");
 
-  console.log("authUrl: ",authUrl);
-
   return authUrl; 
 }
 
@@ -137,14 +132,10 @@ export async function generateTokens(code: string) {
   const authTokens = oAuth2Client.credentials;
   if(!authTokens) throw Error ("Error getting authTokens");
 
-  console.log("authTokens: ", authTokens);
-
   return authTokens;
 }
 
 export async function getUserDataFromGoogle(token: any): Promise<any> {
-  console.log("token: ", token)
-
   //using id_token
   const ticket = await oAuth2Client.verifyIdToken({
     idToken: token,
@@ -154,8 +145,6 @@ export async function getUserDataFromGoogle(token: any): Promise<any> {
   const payload = ticket.getPayload();
     if(!payload) throw new Error('Error getting payload');
     
-    console.log("payload", payload);
-
     // Here, payload contains user information
     const email = payload['email'];
     const first_name = payload['given_name'];
@@ -190,13 +179,10 @@ export async function checkOAuthData({email, password, first_name, last_name}: S
     await db.query("UPDATE users SET last_login = $1 WHERE user_id = $2", [
      date, user.user_id
     ]);
-    console.log("Updated login date.")
   } else {
     await db.query(
       "INSERT INTO users (email, password, first_name, last_name, created_date, last_update) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [email, password, first_name, last_name, date, date]
     );
-  
-    console.log("registered User:", email, password, first_name, last_name, date, date);
   }
 }

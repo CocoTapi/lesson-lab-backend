@@ -110,7 +110,7 @@ router.post('/:id/favorites', asyncHandler(async (req, res) => {
 router.post('/:id/playlists', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
-    const verifiedEmail = await checkAuth(method, authHeader);
+    await checkAuth(method, authHeader);
 
     const playlist_title: string = req.body.playlist_title;
     const user_id: number = parseInt(req.params.id);
@@ -123,7 +123,7 @@ router.post('/:id/playlists', asyncHandler(async (req, res) => {
 router.patch('/:id/playlists/:playlist_id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
-    const verifiedEmail = await checkAuth(method, authHeader);
+    await checkAuth(method, authHeader);
 
     const activity_id_arr: number[] = req.body.activity_id_arr;
     const user_id: number = req.body.user_id;
@@ -140,7 +140,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
     const verifiedEmail = await checkAuth(method, authHeader);
     
     const formData: EditProfileInfo = req.body;
-    const user_id: number = parseInt(req.params.id);
+    //const user_id: number = parseInt(req.params.id);
     
     const errors: ErrorMessage = await checkEditProfileValidation(formData);
 

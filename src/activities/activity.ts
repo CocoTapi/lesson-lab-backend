@@ -109,7 +109,7 @@ export async function checkFormValidation({ title, summary, duration, age_group,
 export async function addActivity({ user_id, title, summary, duration, age_group, objectives, materials, instructions, links, tags }: ActivityFormInfo) {
     //TODO: check trim or formatting the data? 
 
-    console.log("start adding activity");
+    //console.log("start adding activity");
     const date = new Date();
 
     //insert everything except duration, age_group, tags
@@ -119,7 +119,6 @@ export async function addActivity({ user_id, title, summary, duration, age_group
     ])
 
     //get activity_id
-    console.log("start getting activity_id");
     const getActivityIdQuery = `
         SELECT activity_id 
         FROM activities 
@@ -131,10 +130,8 @@ export async function addActivity({ user_id, title, summary, duration, age_group
 
     const activity_id: number = result.rows[0].activity_id;
     if (!activity_id) throw Error("activity doesn't exist in db.");
-    console.log("activity_id: ", activity_id);
 
     //insert duration
-    console.log("start adding duration");
     const durationQuery = getInsertQueryForNestedTable("duration");
 
     await db.query(durationQuery, [
@@ -142,8 +139,6 @@ export async function addActivity({ user_id, title, summary, duration, age_group
     ])
 
     //insert age_group
-    console.log("start adding age_group");
-    console.log(age_group);
     const addAgeGroupQuery = getInsertQueryForNestedTable("age_group");
 
     await db.query(addAgeGroupQuery, [
@@ -156,19 +151,13 @@ export async function addActivity({ user_id, title, summary, duration, age_group
     if (tags && tags.length > 0) {
         await insertTags(tags, activity_id, date)
     }
-
-    console.log("Added activity");
 };
 
 export async function editActivity(activity_id: number, updateData: ActivityFormInfo) {
-    console.log("start editting");
     //get previous Data from activity_id
     const result = await getActivityDetail(activity_id);
     const prevData = result[0];
     const date = new Date();
-
-    console.log("prevData:", prevData);
-    console.log("user sent form:", updateData);
 
     //check if there is the activity added by same user
     if (prevData.user_id !== updateData.user_id) throw Error("Could not find activity to edit for current user")
@@ -185,18 +174,15 @@ export async function editActivity(activity_id: number, updateData: ActivityForm
                     const durationParameters = [updateData.duration, date, activity_id];
 
                     await db.query(durationQuery, durationParameters);
-                    console.log("done duration");
                     break;
                 case 'age_group':
                     const ageGroupQuery: string = getUpdateQueryForNestedTable('age_group');
                     const ageGroupParameters = [updateData.age_group, date, activity_id];
 
                     await db.query(ageGroupQuery, ageGroupParameters);
-                    console.log("done age_group");
                     break;
                 case 'tags':
                     await tagsUpdate(activity_id, prevData[key], updateData[key], date);
-                    console.log("done tags");
 
                     break;
                 case 'like_count':
@@ -210,12 +196,8 @@ export async function editActivity(activity_id: number, updateData: ActivityForm
 
     //update activity table
     if (statements.length === 0) {
-        console.log('update done.')
         return
     }
-
-    console.log("statements.join", statements.join(', '));
-    console.log("lastUpdateNum", otherParameters.length + 1)
 
     const activityUpdateQuery = `
         UPDATE 
@@ -229,16 +211,10 @@ export async function editActivity(activity_id: number, updateData: ActivityForm
     otherParameters.push(date);
     otherParameters.push(activity_id);
 
-    console.log("activityUpdateParameter:", activityUpdateQuery);
-    console.log("otherParameters:", otherParameters);
-
     await db.query(activityUpdateQuery, otherParameters);
-
-    console.log("edit done");
 };
 
 async function tagsUpdate(id: number, prevData: string[], updateData: string[], date: Date) {
-    console.log("start tags update")
     let addedTags: string[] = [];
     let removedTags: string[] = [];
 
@@ -253,9 +229,6 @@ async function tagsUpdate(id: number, prevData: string[], updateData: string[], 
             removedTags.push(tag)
         }
     };
-    console.log("addedTags:", addedTags);
-    console.log("removedTags:", removedTags);
-
 
     if (addedTags.length > 0) {
         insertTags(addedTags, id, date);
@@ -271,7 +244,6 @@ async function tagsUpdate(id: number, prevData: string[], updateData: string[], 
             await db.query(deleteTagQuery, [id, tag]);
         }
     }
-    console.log("tag updae done");
 }
 
 
@@ -286,6 +258,4 @@ export async function removeActivity(id: number) {
     await db.query(deleteAgeGroupQuery, [id]);
     await db.query(deleteTagsQuery, [id]);
     await db.query(deleteActivityQuery, [id]);
-
-    console.log("deleted activity.")
 }
