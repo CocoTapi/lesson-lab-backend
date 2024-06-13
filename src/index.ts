@@ -6,7 +6,7 @@ import tagRoutes from './tags/tagRoutes';
 import userRoutes from './user/userRoutes';
 import env from "dotenv"
 
-env.config();
+
 
 const app = express();
 const port = process.env.SERVER_PORT;
@@ -45,5 +45,5 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running`)
+    console.log(`Server running on port ${port}`)
 });
