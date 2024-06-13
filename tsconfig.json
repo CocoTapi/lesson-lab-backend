@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",                      // The JavaScript version to which TypeScript compiles.
+      "module": "CommonJS",                    // The module system to use.
+      "strict": true,                          // Enable all strict type-checking options.
+      "esModuleInterop": true,                 // Emit additional code to make the transpiled code compatible with ES modules.
+      "skipLibCheck": true,                    // Skip type checking of all declaration files (*.d.ts).
+      "forceConsistentCasingInFileNames": true,// Disallow inconsistently-cased references to the same file.
+      "outDir": "./dist",                      // Redirect output structure to the dist directory.
+      "rootDir": "./src",                      // Specify the root directory of input files.
+      "resolveJsonModule": true,               // Include modules imported with `.json` extension.
+      "moduleResolution": "node",              // Specifies module resolution strategy.
+      "sourceMap": true                        // Generate corresponding `.map` files.
+    },
+    "include": ["src/**/*"],                   // Include all files in src directory and subdirectories.
+    "exclude": ["node_modules", "**/*.spec.ts"] // Exclude the node_modules and test files.
+  }
+  
