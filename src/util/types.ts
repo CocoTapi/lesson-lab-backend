@@ -73,6 +73,7 @@ export interface FavoritesInfo {
 export interface PlaylistActivity {
     activity_ids: number,
     position: number,
+    image_num: number,
     titles: string,
     summary: string,
     duration: number,

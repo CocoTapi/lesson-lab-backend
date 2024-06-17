@@ -87,6 +87,7 @@ export function getSummaryRelationQuery(verifiedEmail?: string){
             a.activity_id,
             a.user_id, 
             a.title, 
+            a.image_num,
             a.summary, 
             d.duration_title AS duration, 
             age.age_group_title AS age_group,
@@ -110,6 +111,7 @@ export function getSummaryRelationQuery(verifiedEmail?: string){
             a.activity_id,
             a.user_id, 
             a.title, 
+            a.image_num,
             a.summary, 
             d.duration_title,
             age.age_group_title
@@ -136,6 +138,7 @@ export function getFilteredSummaryRelationQuery(verifiedEmail?: string){
         SELECT 
             a.activity_id,
             a.title,
+            a.image_num,
             a.summary,
             a.instructions,
             d.duration_title AS duration, 
@@ -176,6 +179,7 @@ export function getFilteredSummaryRelationQuery(verifiedEmail?: string){
             OR age.age_group_title % $2
         GROUP BY 
                     a.activity_id,
+                    a.image_num,
                     d.duration_title,
                     age.age_group_title         
         ORDER BY
@@ -205,6 +209,7 @@ export function getUserActivityRelationQuery(verifiedEmail?: string) {
             a.activity_id, 
             a.user_id, 
             u.user_name,
+            a.image_num,
             a.title, 
             a.summary, 
             d.duration_title AS duration, 
@@ -237,6 +242,7 @@ export function getUserActivityRelationQuery(verifiedEmail?: string) {
             a.activity_id,
             a.user_id, 
             u.user_name,
+            a.image_num,
             a.title, 
             a.summary, 
             d.duration_title,

@@ -15,6 +15,7 @@ import {
 
 const db = Database.db;
 
+//get all activities
 export async function getAllActivities() {
     const query = getSummaryRelationQuery();
 
@@ -22,9 +23,10 @@ export async function getAllActivities() {
 
     if (result.rows.length <= 0) throw new Error("Activities does not exist")
 
+    console.log("result.rows", result.rows)
     return result.rows
 }
-
+//get all activities for a specific user
 export async function getAllActivitiesUser(verifiedEmail: string){
     const query = getSummaryRelationQuery(verifiedEmail);
 
@@ -67,7 +69,7 @@ export async function getActivityDetailUser(activity_id: number, verifiedEmail?:
     if (verifiedEmail) {
         parameters.push(verifiedEmail);
     }
-
+    
     const result = await db.query(query, parameters);
 
     if (result.rows.length <= 0) throw new Error("Activities does not exist")
