@@ -5,13 +5,12 @@ import activityRoutes from './activities/activityRoutes';
 import tagRoutes from './tags/tagRoutes';
 import userRoutes from './user/userRoutes';
 import env from "dotenv"
-
+import testRoutes from './test-routes/testRoutes';
 
 env.config();
 
 const app = express();
 const port = process.env.SERVER_PORT;
-
 
 app.use(bodyParser.json());
 
@@ -32,9 +31,11 @@ app.use(authRoutes);
 app.use('/activities', activityRoutes);
 app.use('/tags', tagRoutes)
 app.use('/user', userRoutes)
+app.use('/testRoutes', testRoutes);
 
 // Custom error handling middleware
 app.use((error: any, req: any, res: any, next: any) => {
+    console.log(error)
     const status = error.status || 500;
     const message = error.message || 'Something went wrong.';
     res.status(status).json({ error: message })

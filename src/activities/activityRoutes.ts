@@ -21,22 +21,23 @@ const router = express.Router();
 
 //get summary list
 router.get('/', asyncHandler(async (req, res) => {
-    // const method = req.method;
-    // const authHeader = req.headers.authorization;
-    // const id: number = parseInt(req.params.id);
-    // const searchTerm: string = req.body.searchTerm;
-    
-    // let verifiedEmail;
-    // if (authHeader)
-    //     verifiedEmail = await checkAuth(method, authHeader);
-    
-    // let activities;
-    // if (verifiedEmail)
-    //     activities = await  getAllActivitiesUser(verifiedEmail);
-    // else activities = await  getAllActivities();
-   
-    // res.status(200).json({ activities: activities });
-    res.status(200).json({message: "succeeded!"})
+    // console.log("called")
+    const method = req.method;
+    const authHeader = req.headers.authorization;
+    const id: number = parseInt(req.params.id);
+    const searchTerm: string = req.body.searchTerm;
+
+    let verifiedEmail;
+    if (authHeader)
+        verifiedEmail = await checkAuth(method, authHeader);
+
+    let activities;
+    if (verifiedEmail)
+        activities = await getAllActivitiesUser(verifiedEmail);
+    else activities = await getAllActivities();
+
+    res.status(200).json({ activities: activities });
+    // res.status(200).json({message: "succeeded!"})
 }))
 
 //get activity detail
@@ -61,13 +62,13 @@ router.post('/search', asyncHandler(async (req, res) => {
     const authHeader = req.headers.authorization;
     //const id: number = parseInt(req.params.id);
     const searchTerm: string = req.body.searchTerm;
-    
+
     let verifiedEmail;
     if (authHeader)
         verifiedEmail = await checkAuth(method, authHeader);
-    
+
     let filteredActivities;
-    if(verifiedEmail) {
+    if (verifiedEmail) {
         filteredActivities = await getFilteredActivitiesUser(verifiedEmail, searchTerm)
     } else {
         filteredActivities = await getFilteredActivities(searchTerm);
