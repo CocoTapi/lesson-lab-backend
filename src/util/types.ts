@@ -42,6 +42,7 @@ export interface ActivityFormInfo {
     materials: string,
     instructions: string,
     links: string,
+    image_num: number,
     tags: string[],
     [key: string]: string | number | string[] | boolean | undefined,
     is_favorited?: boolean

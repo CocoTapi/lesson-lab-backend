@@ -39,7 +39,7 @@ router.get('/', asyncHandler(async (req, res) => {
 }))
 
 
-//get user profile and favorites
+//get user profile
 router.get('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;

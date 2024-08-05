@@ -1,6 +1,6 @@
 import Database from "../database/Database";
 import { ActivityFormInfo, ErrorMessage } from "../util/types";
-import { isValidAgeGroup, isValidDuration, isValidLinks, isValidTags, isValidText, isValidUrl } from "../util/validation";
+import { isValidAgeGroup, isValidDuration, isValidImageNumber, isValidLinks, isValidTags, isValidText, isValidUrl } from "../util/validation";
 import {
     getDeleteAllColumnQuery,
     getInsertQueryForNestedTable,
@@ -88,7 +88,7 @@ export async function getActivityDetail(activity_id: number) {
     return result.rows;
 }
 
-export async function checkFormValidation({ title, summary, duration, age_group, objectives, materials, instructions, links, tags }: ActivityFormInfo) {
+export async function checkFormValidation({ title, image_num, summary, duration, age_group, objectives, materials, instructions, links, tags }: ActivityFormInfo) {
     let errors: ErrorMessage = {};
     if (!isValidText(title)) errors.title = "Invalid title.";
     if (!isValidText(summary)) errors.summary = "Invalid summary.";
@@ -99,6 +99,7 @@ export async function checkFormValidation({ title, summary, duration, age_group,
     if (!isValidText(instructions)) errors.instructions = "Invalid instructions.";
     if (isValidLinks(links) === false) errors.links = "Invalid links";
     if (!isValidTags(tags)) errors.tags = "Invalid tags. Add at least one tag.";
+    if (!isValidImageNumber(image_num))errors.image_num = "Choose one image."
 
     if (Object.keys(errors).length > 0) return errors;
 
@@ -108,7 +109,7 @@ export async function checkFormValidation({ title, summary, duration, age_group,
 
 
 
-export async function addActivity({ user_id, title, summary, duration, age_group, objectives, materials, instructions, links, tags }: ActivityFormInfo) {
+export async function addActivity({ user_id, title, summary, duration, age_group, objectives, materials, instructions, links, tags, image_num }: ActivityFormInfo) {
     //TODO: check trim or formatting the data? 
 
     //console.log("start adding activity");
@@ -117,7 +118,7 @@ export async function addActivity({ user_id, title, summary, duration, age_group
     //insert everything except duration, age_group, tags
     await db.query(addActivitiesQuery, [
         user_id, title, summary, objectives, materials,
-        instructions, links, date, date
+        instructions, links, image_num, date, date
     ])
 
     //get activity_id

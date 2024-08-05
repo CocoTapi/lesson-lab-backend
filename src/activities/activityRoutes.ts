@@ -77,6 +77,7 @@ router.post('/search', asyncHandler(async (req, res) => {
     res.status(200).json({ activities: filteredActivities });
 }))
 
+//add a new activity
 router.post('/', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
@@ -96,6 +97,8 @@ router.post('/', asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Successfully added an activity.' });
 }))
 
+
+//edit an activity
 router.patch('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
