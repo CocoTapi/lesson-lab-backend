@@ -280,23 +280,25 @@ export async function reformatPlaylistData(playlists: UserPlaylistResult[]) {
     return Object.values(map) as FormattedPlaylist[];
 }
 
-// export async function reformatActivityData(playlists: UserPlaylist[]) {
-//     const activities: any = [];
-//     console.log(playlists)
-//     playlists.forEach((playlist: UserPlaylist) => {
-//         const { user_name, playlist_title, activity_ids, activity_titles, summaries, durations } = playlist;
-//         activity_ids.forEach((activity_id, index) => {
-//             activities.push({
-//                 activity_id,
-//                 activity_title: activity_titles[index],
-//                 activity_summary: summaries[index],
-//                 activity_duration: durations[index]
-//             });
-//         });
-//     });
+export const reorderActivitiesQuery = `
+        WITH new_positions AS (
+            SELECT
+                unnest($1::int[]) AS activity_id,
+                generate_series(1, array_length($1, 1)) AS position  
+        )
+        UPDATE 
+            playlist_activities
+        SET 
+            position = new_positions.position,
+            last_update = $3
+        FROM 
+            new_positions
+        WHERE 
+            playlist_activities.playlist_id = $2  
+        AND 
+            playlist_activities.activity_id = new_positions.activity_id;
+`;
 
-//     return activities;
-// }
 
 export const deleteActivitiesQuery = `
     DELETE FROM 
