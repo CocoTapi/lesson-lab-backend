@@ -72,7 +72,7 @@ export interface FavoritesInfo {
 }
 
 export interface PlaylistActivity {
-    activity_ids: number,
+    activity_id: number,
     position: number,
     image_num: number,
     titles: string,
@@ -95,7 +95,8 @@ export interface FormattedPlaylist {
     playlist_title: string,
     user_id: number,
     total_duration: number,
-    activities: PlaylistActivity[]
+    activities: PlaylistActivity[],
+    activity_ids: number[]
 } 
 
 

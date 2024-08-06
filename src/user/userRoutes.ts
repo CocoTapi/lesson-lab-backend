@@ -215,13 +215,15 @@ router.delete('/:user_id/playlists', asyncHandler(async(req, res) => {
 }))
 
 //remove activity from playlist
-router.patch('/:user_id/playlists', asyncHandler(async(req, res) => {
+router.delete('/:user_id/playlists/:playlist_id', asyncHandler(async(req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
     const verifiedEmail = await checkAuth(method, authHeader);
 
     const playlist_id: number = req.body.playlist_id;
     const activity_id: number = req.body.activity_id;
+
+    console.log("started", playlist_id, activity_id)
   
     await removeActivityFromPlaylist(playlist_id, activity_id);
 

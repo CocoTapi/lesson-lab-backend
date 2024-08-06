@@ -270,11 +270,13 @@ export async function reformatPlaylistData(playlists: UserPlaylistResult[]) {
                 user_id,
                 total_duration: 0,
                 activities: [],
+                activity_ids: []
             }
         };
 
         map[playlist_id].activities.push(activityDetails);
         map[playlist_id].total_duration += activityDetails.duration;
+        map[playlist_id].activity_ids.push(activityDetails.activity_id);
     })
 
     return Object.values(map) as FormattedPlaylist[];
