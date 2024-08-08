@@ -51,8 +51,6 @@ export async function getUserProfile(email: string) {
 
     const userProfile = result.rows[0];
 
-    console.log(userProfile);
-
     if(userProfile.password !== 'google') {
         delete userProfile.password;
     }

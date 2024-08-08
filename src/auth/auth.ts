@@ -155,17 +155,6 @@ export async function getUserDataFromGoogle(token: any): Promise<any> {
     const isExpired = payload.exp < Date.now() / 1000;
 	  if (!payload.exp || isExpired) throw new Error('Token expired');
 
-    //using access_token
-    // const response = await fetch(
-    //   `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
-    // )
-    // const data: GoogleUser = await response.json() as GoogleUser;
-    // const email = data.email;
-    // const first_name = data.given_name;
-    // const last_name = data.family_name;
-
-    //console.log(email, first_name, last_name)
-
   return {email, first_name, last_name};
 }
 
