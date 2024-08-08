@@ -131,6 +131,8 @@ export async function generateTokens(code: string) {
 
   const authTokens = oAuth2Client.credentials;
   if(!authTokens) throw Error ("Error getting authTokens");
+  
+  //console.log(authTokens)
 
   return authTokens;
 }
@@ -162,6 +164,8 @@ export async function getUserDataFromGoogle(token: any): Promise<any> {
     // const first_name = data.given_name;
     // const last_name = data.family_name;
 
+    //console.log(email, first_name, last_name)
+
   return {email, first_name, last_name};
 }
 
@@ -179,10 +183,14 @@ export async function checkOAuthData({email, password, first_name, last_name}: S
     await db.query("UPDATE users SET last_login = $1 WHERE user_id = $2", [
      date, user.user_id
     ]);
+
+    console.log("user already in the list")
   } else {
     await db.query(
       "INSERT INTO users (email, password, first_name, last_name, created_date, last_update) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [email, password, first_name, last_name, date, date]
     );
+
+    console.log("new user added.")
   }
 }

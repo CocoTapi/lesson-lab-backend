@@ -61,7 +61,10 @@ router.post("/oauth", asyncHandler(async (req, res) => {
     res.status(200).json({ authUrl });
 }));
 
-
+// localhost:8080/auth/google?
+// code=4%2F0AcvDMrBKyO_0nCVsvBnhbft1E7QTDmc6-aDbth7mvoGctegmbiBY51qY32CMupM98D0xgQ
+// &
+// scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent
 
 router.get("/auth/google", asyncHandler(async function (req, res) {
     const code: string = req.query.code as string;
@@ -73,11 +76,13 @@ router.get("/auth/google", asyncHandler(async function (req, res) {
     
     const password = "google";
 
+    //check if the user already login this website or not
     await checkOAuthData({email, password, first_name, last_name});
 
-    //TODO: setup token
-    const token = "1345rhgdfjhgav4yug1q4hetkqh345y134thqekrjhvgtkq3h5";
-    const filePath = path.join(__dirname, '../redirect.html');
+    //create JSON token
+    const token = createJSONToken(email);
+    console.log(token);
+    const filePath = path.join(__dirname, '../../redirect.html');
 
     // Read in the HTML file content
     fs.readFile(filePath, { encoding: 'utf-8' }, (err: any, htmlContent: string) => {

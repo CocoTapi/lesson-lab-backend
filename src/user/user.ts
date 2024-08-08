@@ -51,7 +51,11 @@ export async function getUserProfile(email: string) {
 
     const userProfile = result.rows[0];
 
-    delete userProfile.password;
+    console.log(userProfile);
+
+    if(userProfile.password !== 'google') {
+        delete userProfile.password;
+    }
 
     return userProfile;
 }
