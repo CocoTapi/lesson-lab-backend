@@ -22,10 +22,11 @@ router.get('/', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
 
+
     let verifiedEmail;
     if (authHeader)
         verifiedEmail = await checkAuth(method, authHeader);
-    
+
     let activities;
     if (verifiedEmail)
         activities = await getAllActivitiesUser(verifiedEmail);
@@ -56,13 +57,13 @@ router.post('/search', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
     const searchTerm: string = req.body.searchTerm;
-    
+
     let verifiedEmail;
     if (authHeader)
         verifiedEmail = await checkAuth(method, authHeader);
-    
+
     let filteredActivities;
-    if(verifiedEmail) {
+    if (verifiedEmail) {
         filteredActivities = await getFilteredActivitiesUser(verifiedEmail, searchTerm)
     } else {
         filteredActivities = await getFilteredActivities(searchTerm);

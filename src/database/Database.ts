@@ -46,7 +46,7 @@ export default class Database {
                 host: process.env.PG_HOST,
                 database: process.env.PG_DATABASE,
                 password: process.env.PG_PASSWORD,
-                port: parseInt(process.env.PG_PORT as string),
+                port: parseInt(process.env.PG_PORT || '5432'),
                 max: 10, // Maximum number of clients in the pool
                 idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
             });

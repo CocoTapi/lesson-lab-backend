@@ -8,7 +8,6 @@ import userRoutes from './user/userRoutes';
 const app = express();
 const port = process.env.SERVER_PORT;
 
-
 app.use(bodyParser.json());
 
 //CORS middleware
@@ -28,6 +27,7 @@ app.use(authRoutes);
 app.use('/activities', activityRoutes);
 app.use('/tags', tagRoutes)
 app.use('/user', userRoutes)
+app.use('/testRoutes', testRoutes);
 
 // Custom error handling middleware
 app.use((error: any, req: any, res: any, next: any) => {

@@ -54,7 +54,7 @@ router.post("/login", asyncHandler(async (req, res) => {
 
 //create the url for google login and send it back to the frontend
 router.post("/oauth", asyncHandler(async (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); //TODO: CHANGE ME. This will not work in production.
     res.header("Referrer-Policy", 'no-referrer-when-downgrade');
 
     const authUrl = await oAuthLogin();
