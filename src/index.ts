@@ -4,6 +4,7 @@ import authRoutes from './auth/authRoutes';
 import activityRoutes from './activities/activityRoutes';
 import tagRoutes from './tags/tagRoutes';
 import userRoutes from './user/userRoutes';
+import testRoutes from './test-routes/testRoutes';
 
 const app = express();
 const port = process.env.SERVER_PORT;
@@ -25,8 +26,9 @@ app.use((req, res, next) => {
 
 app.use(authRoutes);
 app.use('/activities', activityRoutes);
-app.use('/tags', tagRoutes)
-app.use('/user', userRoutes)
+app.use('/tags', tagRoutes);
+app.use('/user', userRoutes);
+app.use('/test', testRoutes);
 
 // Custom error handling middleware
 app.use((error: any, req: any, res: any, next: any) => {
