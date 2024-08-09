@@ -4,7 +4,6 @@ import authRoutes from './auth/authRoutes';
 import activityRoutes from './activities/activityRoutes';
 import tagRoutes from './tags/tagRoutes';
 import userRoutes from './user/userRoutes';
-import env from "dotenv"
 
 const app = express();
 const port = process.env.SERVER_PORT;
