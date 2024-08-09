@@ -81,7 +81,7 @@ router.get("/auth/google", asyncHandler(async function (req, res) {
 
     //create JSON token
     const token = createJSONToken(email);
-    console.log(token);
+    //console.log(token);
     const filePath = path.join(__dirname, '../../redirect.html');
 
     // Read in the HTML file content

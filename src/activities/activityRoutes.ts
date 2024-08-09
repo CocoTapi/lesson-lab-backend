@@ -39,7 +39,7 @@ router.get('/', asyncHandler(async (req, res) => {
 router.get('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
-    console.log(authHeader)
+    //console.log(authHeader)
     let verifiedEmail;
     if (authHeader)
         verifiedEmail = await checkAuth(method, authHeader);
@@ -98,7 +98,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
     const verifiedEmail = await checkAuth(method, authHeader);
-    console.log("Pass Authorization. verifiedEmail:", verifiedEmail);
+    //console.log("Pass Authorization. verifiedEmail:", verifiedEmail);
 
 
     const formData: ActivityFormInfo = req.body;

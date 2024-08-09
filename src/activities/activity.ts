@@ -23,7 +23,7 @@ export async function getAllActivities() {
 
     if (result.rows.length <= 0) throw new Error("Activities does not exist")
 
-    console.log("result.rows", result.rows)
+    //console.log("result.rows", result.rows)
     return result.rows
 }
 //get all activities for a specific user

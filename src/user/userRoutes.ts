@@ -223,7 +223,7 @@ router.delete('/:user_id/playlists/:playlist_id', asyncHandler(async(req, res) =
     const playlist_id: number = req.body.playlist_id;
     const activity_id: number = req.body.activity_id;
 
-    console.log("started", playlist_id, activity_id)
+    //console.log("started", playlist_id, activity_id)
   
     await removeActivityFromPlaylist(playlist_id, activity_id);
 
