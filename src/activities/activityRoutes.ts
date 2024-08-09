@@ -19,8 +19,6 @@ const router = express.Router();
 
 //get summary list
 router.get('/', asyncHandler(async (req, res) => {
-    console.log("run")
-
     const method = req.method;
     const authHeader = req.headers.authorization;
 
@@ -30,8 +28,8 @@ router.get('/', asyncHandler(async (req, res) => {
     
     let activities;
     if (verifiedEmail)
-        activities = await  getAllActivitiesUser(verifiedEmail);
-    else activities = await  getAllActivities();
+        activities = await getAllActivitiesUser(verifiedEmail);
+    else activities = await getAllActivities();
    
     res.status(200).json({ activities });
 }))
