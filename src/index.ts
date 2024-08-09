@@ -27,7 +27,6 @@ app.use(authRoutes);
 app.use('/activities', activityRoutes);
 app.use('/tags', tagRoutes)
 app.use('/user', userRoutes)
-app.use('/testRoutes', testRoutes);
 
 // Custom error handling middleware
 app.use((error: any, req: any, res: any, next: any) => {
