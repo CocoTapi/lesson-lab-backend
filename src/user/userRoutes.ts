@@ -16,7 +16,8 @@ import {
     addPlaylist,
     deletePlaylist,
     removeActivityFromPlaylist,
-    addActivitiesIntoPlaylist
+    addActivitiesIntoPlaylist,
+    reorderActivities
 } from "./user";
 import env from "dotenv";
 
@@ -39,7 +40,7 @@ router.get('/', asyncHandler(async (req, res) => {
 }))
 
 
-//get user profile and favorites
+//get user profile
 router.get('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
@@ -119,18 +120,31 @@ router.post('/:id/playlists', asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'New playlist added.'});
 }))
 
-//add activities into playlist
+//update playlist
 router.patch('/:id/playlists/:playlist_id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
     await checkAuth(method, authHeader);
 
-    const activity_id_arr: number[] = req.body.activity_id_arr;
-    const user_id: number = req.body.user_id;
+    const user_id: number = parseInt(req.params.id);
     const playlist_id: number = req.body.playlist_id;
 
-    await addActivitiesIntoPlaylist(activity_id_arr, user_id, playlist_id);   
-    res.status(200).json({ message: 'Activities added into a playlist.'});      
+    //add activities
+    if(req.body.activity_id_arr){
+        const activity_id_arr: number[] = req.body.activity_id_arr;
+
+        await addActivitiesIntoPlaylist(activity_id_arr, user_id, playlist_id);   
+        res.status(200).json({ message: 'Activities added into a playlist.'});  
+    }
+    
+    //reorder activities
+    if(req.body.reorderedActivities) {
+        const reorderedActivities: number[] = req.body.reorderedActivities;
+
+        await reorderActivities(reorderedActivities, playlist_id);
+        res.status(200).json({ message: 'Activities reordered.'});  
+    }
+    
 }))
 
 //edit user profile
@@ -201,13 +215,15 @@ router.delete('/:user_id/playlists', asyncHandler(async(req, res) => {
 }))
 
 //remove activity from playlist
-router.patch('/:user_id/playlists', asyncHandler(async(req, res) => {
+router.delete('/:user_id/playlists/:playlist_id', asyncHandler(async(req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
     const verifiedEmail = await checkAuth(method, authHeader);
 
     const playlist_id: number = req.body.playlist_id;
     const activity_id: number = req.body.activity_id;
+
+    console.log("started", playlist_id, activity_id)
   
     await removeActivityFromPlaylist(playlist_id, activity_id);
 

@@ -49,11 +49,11 @@ export function isValidAgeGroup(value: string) {
     }
 }
 
-export function isValidUrl(value: string) {
+export function isValidUrl(value: string){
     return value && value.trim().startsWith('http');
 }
 
-export function isValidLinks(value: string) {
+export function isValidLinks(value: string): boolean{
     if (value === "null") return true;
 
     if(!isValidUrl(value)) return false
@@ -61,6 +61,10 @@ export function isValidLinks(value: string) {
     return true;
 }
 
-export function isValidTags(arr: string[], minLength: number = 1) {
+export function isValidTags(arr: string[], minLength: number = 1): boolean {
     return arr && arr.length >= minLength;
+}
+
+export function isValidImageNumber(image_num: number): boolean {
+    return image_num >= 1 && image_num <= 20;
 }

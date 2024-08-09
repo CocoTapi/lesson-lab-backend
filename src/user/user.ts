@@ -16,7 +16,8 @@ import {
     removeActivityFromPlaylistQuery,
     reformatPlaylistData,
     getActivityInsertionQuery,
-    getCurrentActivityCount
+    getCurrentActivityCount,
+    reorderActivitiesQuery
 } from "./util";
 
 env.config();
@@ -50,7 +51,9 @@ export async function getUserProfile(email: string) {
 
     const userProfile = result.rows[0];
 
-    delete userProfile.password;
+    if(userProfile.password !== 'google') {
+        delete userProfile.password;
+    }
 
     return userProfile;
 }
@@ -97,26 +100,9 @@ export async function getUserPlaylists(user_id: number) {
     const formattedPlaylist: FormattedPlaylist[] = await reformatPlaylistData(userPlaylists);
 
     return formattedPlaylist;
-
-    //when user does not have any playlists
-    //if (result.rows.length === 0) return userPlaylistsResult;
-    
-    
-    // userPlaylistsResult = result.rows;
-    // console.log(userPlaylistsResult);
-
-    // const userPlaylists: UserPlaylistResult[] = Object.values(userPlaylistsResult) as UserPlaylistResult[];
-    
-    // const formattedPlaylist: FormattedPlaylist[] = await reformatPlaylistData(userPlaylists);
-
-    //const userPlaylists: UserPlaylist[] = Object.values(userPlaylistsResult) as UserPlaylist[];
-
-    //const formattedActivityData = await reformatActivityData(userPlaylists);
-
-    //return formattedPlaylist;
 }
 
-//error handling
+//error handling for profile data
 export async function checkEditProfileValidation({ user_id, user_name, email, password, first_name, last_name }: EditProfileInfo) {
     const errors : ErrorMessage = {};
     let passwordValidity;
@@ -216,6 +202,7 @@ export async function addFavorites({ user_id, activity_id, is_favorited }: Favor
 
 }
 
+//update playlist: create a new playlist
 export async function addPlaylist(playlist_titl: string, user_id: number){
     const date = new Date();
     const query: string = addPlaylistQuery;
@@ -224,7 +211,7 @@ export async function addPlaylist(playlist_titl: string, user_id: number){
 
 }
 
-//add activities into a playlist
+//update playlist: add activities into a playlist
 export async function addActivitiesIntoPlaylist(activity_id_arr: number[], user_id: number, playlist_id: number) {
     const date = new Date();
     const check = await db.query(getCurrentActivityCount, [playlist_id]);
@@ -242,6 +229,15 @@ export async function addActivitiesIntoPlaylist(activity_id_arr: number[], user_
     await db.query(query, parameters);
 }
 
+//update playlist: reorder activities
+export async function reorderActivities(reorderedActivities: number[], playlist_id: number){
+    const date = new Date();
+    const query: string =reorderActivitiesQuery;
+    
+    await db.query(query, [reorderedActivities, playlist_id, date]);
+}
+
+//delete account
 export async function removeProfile(user_id: number, email: string) {
     const deleteFavQuery = `
         DELETE FROM 
@@ -262,6 +258,7 @@ export async function removeProfile(user_id: number, email: string) {
     await db.query(deleteProfileQuery, [user_id, email]);
 }
 
+//unlike activity 
 export async function removeFavoriteActivity(user_id: number, activity_id: number) {
     const deleteUserActivityQuery = `
         DELETE FROM
@@ -274,6 +271,7 @@ export async function removeFavoriteActivity(user_id: number, activity_id: numbe
     await db.query(deleteUserActivityQuery, [user_id, activity_id]);
 };
 
+//delete playlist
 export async function deletePlaylist(user_id: number, playlist_id: number){
     const activityDelete = deleteActivitiesQuery;
     const playlistDelete = deletePlaylistQuery;
@@ -282,6 +280,7 @@ export async function deletePlaylist(user_id: number, playlist_id: number){
     await db.query(playlistDelete, [playlist_id, user_id]);
 }
 
+//remove activity from playlist
 export async function removeActivityFromPlaylist(playlist_id: number, activity_id: number){
     const query = removeActivityFromPlaylistQuery;
 

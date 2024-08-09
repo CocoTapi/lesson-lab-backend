@@ -42,6 +42,7 @@ export interface ActivityFormInfo {
     materials: string,
     instructions: string,
     links: string,
+    image_num: number,
     tags: string[],
     [key: string]: string | number | string[] | boolean | undefined,
     is_favorited?: boolean
@@ -71,8 +72,9 @@ export interface FavoritesInfo {
 }
 
 export interface PlaylistActivity {
-    activity_ids: number,
+    activity_id: number,
     position: number,
+    image_num: number,
     titles: string,
     summary: string,
     duration: number,
@@ -93,7 +95,8 @@ export interface FormattedPlaylist {
     playlist_title: string,
     user_id: number,
     total_duration: number,
-    activities: PlaylistActivity[]
+    activities: PlaylistActivity[],
+    activity_ids: number[]
 } 
 
 

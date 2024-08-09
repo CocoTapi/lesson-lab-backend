@@ -32,7 +32,7 @@ export async function verifyToken(authHeader: string) {
     const authToken = authFragments[1];
 
     const decoded = validateJSONToken(authToken);
-    console.log("decoded:", decoded);
+    //console.log("decoded:", decoded);
 
    // Check if decoded is an object (JwtPayload)
     if (typeof decoded !== 'object' || decoded === null) {

@@ -15,17 +15,13 @@ import {
 import { ActivityFormInfo, ErrorMessage } from "../util/types";
 import { checkAuth } from "../util/auth";
 
-
-
 const router = express.Router();
 
 //get summary list
 router.get('/', asyncHandler(async (req, res) => {
-    // console.log("called")
     const method = req.method;
     const authHeader = req.headers.authorization;
-    const id: number = parseInt(req.params.id);
-    const searchTerm: string = req.body.searchTerm;
+
 
     let verifiedEmail;
     if (authHeader)
@@ -35,15 +31,15 @@ router.get('/', asyncHandler(async (req, res) => {
     if (verifiedEmail)
         activities = await getAllActivitiesUser(verifiedEmail);
     else activities = await getAllActivities();
-
-    res.status(200).json({ activities: activities });
-    // res.status(200).json({message: "succeeded!"})
+   
+    res.status(200).json({ activities });
 }))
 
 //get activity detail
 router.get('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
+    console.log(authHeader)
     let verifiedEmail;
     if (authHeader)
         verifiedEmail = await checkAuth(method, authHeader);
@@ -53,14 +49,13 @@ router.get('/:id', asyncHandler(async (req, res) => {
     if (verifiedEmail)
         activity = await getActivityDetailUser(id, verifiedEmail);
     else activity = await getActivityDetail(id);
-    res.status(200).json({ activity: activity });
+    res.status(200).json({ activity });
 }))
 
 //get filtered summary list
 router.post('/search', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
-    //const id: number = parseInt(req.params.id);
     const searchTerm: string = req.body.searchTerm;
 
     let verifiedEmail;
@@ -77,6 +72,7 @@ router.post('/search', asyncHandler(async (req, res) => {
     res.status(200).json({ activities: filteredActivities });
 }))
 
+//add a new activity
 router.post('/', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;
@@ -96,6 +92,8 @@ router.post('/', asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Successfully added an activity.' });
 }))
 
+
+//edit an activity
 router.patch('/:id', asyncHandler(async (req, res) => {
     const method = req.method;
     const authHeader = req.headers.authorization;

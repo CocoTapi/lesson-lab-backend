@@ -4,10 +4,6 @@ import authRoutes from './auth/authRoutes';
 import activityRoutes from './activities/activityRoutes';
 import tagRoutes from './tags/tagRoutes';
 import userRoutes from './user/userRoutes';
-import env from "dotenv"
-import testRoutes from './test-routes/testRoutes';
-
-env.config();
 
 const app = express();
 const port = process.env.SERVER_PORT;
@@ -19,8 +15,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-      // Handle preflight requests
-      if (req.method === 'OPTIONS') {
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
         res.status(200).end();
     } else {
         next();

@@ -131,6 +131,8 @@ export async function generateTokens(code: string) {
 
   const authTokens = oAuth2Client.credentials;
   if(!authTokens) throw Error ("Error getting authTokens");
+  
+  //console.log(authTokens)
 
   return authTokens;
 }
@@ -153,15 +155,6 @@ export async function getUserDataFromGoogle(token: any): Promise<any> {
     const isExpired = payload.exp < Date.now() / 1000;
 	  if (!payload.exp || isExpired) throw new Error('Token expired');
 
-    //using access_token
-    // const response = await fetch(
-    //   `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
-    // )
-    // const data: GoogleUser = await response.json() as GoogleUser;
-    // const email = data.email;
-    // const first_name = data.given_name;
-    // const last_name = data.family_name;
-
   return {email, first_name, last_name};
 }
 
@@ -179,10 +172,14 @@ export async function checkOAuthData({email, password, first_name, last_name}: S
     await db.query("UPDATE users SET last_login = $1 WHERE user_id = $2", [
      date, user.user_id
     ]);
+
+    console.log("user already in the list")
   } else {
     await db.query(
       "INSERT INTO users (email, password, first_name, last_name, created_date, last_update) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [email, password, first_name, last_name, date, date]
     );
+
+    console.log("new user added.")
   }
 }
