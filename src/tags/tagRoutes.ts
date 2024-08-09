@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', asyncHandler(async(req, res) => {
     const tags: string[] = await getPopular100Tags();
-    res.status(200).json({ tags: tags});
+    res.status(200).json({ tags });
 }))
 
 export default router;

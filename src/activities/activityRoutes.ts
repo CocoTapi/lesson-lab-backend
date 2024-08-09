@@ -35,7 +35,7 @@ router.get('/', asyncHandler(async (req, res) => {
         activities = await  getAllActivitiesUser(verifiedEmail);
     else activities = await  getAllActivities();
    
-    res.status(200).json({ activities: activities });
+    res.status(200).json({ activities });
     // res.status(200).json({message: "succeeded!"})
 }))
 
@@ -53,7 +53,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
     if (verifiedEmail)
         activity = await getActivityDetailUser(id, verifiedEmail);
     else activity = await getActivityDetail(id);
-    res.status(200).json({ activity: activity });
+    res.status(200).json({ activity });
 }))
 
 //get filtered summary list
