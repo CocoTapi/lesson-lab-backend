@@ -119,6 +119,10 @@ router.patch('/:id', asyncHandler(async (req, res) => {
 }))
 
 router.delete('/:id', asyncHandler(async (req, res) => {
+    const method = req.method;
+    const authHeader = req.headers.authorization;
+    const verifiedEmail = await checkAuth(method, authHeader);
+    
     const id: number = parseInt(req.params.id);
 
     await removeActivity(id);
