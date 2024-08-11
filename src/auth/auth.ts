@@ -7,7 +7,7 @@ import { isValidEmail, isValidPassword, isValidText } from "../util/validation";
 
 env.config();
 
-const redirectUrl = process.env.GOOGLE_REDIRECTURL;
+const redirectUrl = `${process.env.BASE_URL}${process.env.GOOGLE_REDIRECT_PATH}`; 
 
 const oAuth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,

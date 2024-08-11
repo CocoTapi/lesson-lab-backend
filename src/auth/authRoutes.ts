@@ -1,12 +1,12 @@
 import express from "express";
-import { 
-    signUp, 
+import {
+    signUp,
     login,
-    getUserDataFromGoogle, 
-    oAuthLogin, 
-    generateTokens, 
-    checkOAuthData, 
-    checkProfileValidation 
+    getUserDataFromGoogle,
+    oAuthLogin,
+    generateTokens,
+    checkOAuthData,
+    checkProfileValidation
 } from "./auth";
 import { asyncHandler } from "../util/route-util";
 import { LoginInfo, SignUpInfo, ErrorMessage } from "../util/types";
@@ -18,15 +18,15 @@ const path = require('path');
 
 
 env.config();
-
+const FROTEND_URL = process.env.FRONTEND_URL;
 const router = express.Router();
 
 
 
 router.post("/signup", asyncHandler(async (req, res) => {
     const signUpInfo: SignUpInfo = req.body;
-    const errors : ErrorMessage = await checkProfileValidation(signUpInfo);
-    
+    const errors: ErrorMessage = await checkProfileValidation(signUpInfo);
+
     if (Object.keys(errors).length > 0) {
         return res.status(422).json({
             message: "User signup failed due to validation errors.",
@@ -43,8 +43,8 @@ router.post("/login", asyncHandler(async (req, res) => {
     const userDetails = await login(loginInfo);
     const token = createJSONToken(userDetails.email);
 
-    res.status(200).json({ 
-        message: 'Successfully logged in with user credentials.', 
+    res.status(200).json({
+        message: 'Successfully logged in with user credentials.',
         data: userDetails,
         token: token
     })
@@ -54,7 +54,8 @@ router.post("/login", asyncHandler(async (req, res) => {
 
 //create the url for google login and send it back to the frontend
 router.post("/oauth", asyncHandler(async (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); //TODO: CHANGE ME. This will not work in production.
+
+    res.header('Access-Control-Allow-Origin', `${FROTEND_URL}`); 
     res.header("Referrer-Policy", 'no-referrer-when-downgrade');
 
     const authUrl = await oAuthLogin();
@@ -72,12 +73,12 @@ router.get("/auth/google", asyncHandler(async function (req, res) {
 
     const tokens = await generateTokens(code);
 
-    const {email, first_name, last_name} = await getUserDataFromGoogle(tokens.id_token);
-    
+    const { email, first_name, last_name } = await getUserDataFromGoogle(tokens.id_token);
+
     const password = "google";
 
     //check if the user already login this website or not
-    await checkOAuthData({email, password, first_name, last_name});
+    await checkOAuthData({ email, password, first_name, last_name });
 
     //create JSON token
     const token = createJSONToken(email);

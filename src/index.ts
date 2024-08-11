@@ -5,10 +5,28 @@ import activityRoutes from './activities/activityRoutes';
 import tagRoutes from './tags/tagRoutes';
 import userRoutes from './user/userRoutes';
 import testRoutes from './test-routes/testRoutes';
+const cors = require('cors');
 
 const app = express();
-const port = process.env.SERVER_PORT;
+const SERVER_PORT = process.env.SERVER_PORT;
 
+const allowedOrigins = [
+    'http://localhost:3000', // Development origin
+    'https://cocotapi.github.io', // Production origin
+];
+
+const corsOptions = {
+    origin: function (origin: any, callback: any) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Enable sending of cookies
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 //CORS middleware
@@ -31,7 +49,7 @@ app.use('/user', userRoutes);
 app.use('/test', testRoutes);
 
 // Custom error handling middleware
-app.use((error: any, req: any, res: any, next: any) => {
+app.use((error: any, _req: any, res: any, _next: any) => {
     console.log(error)
     const status = error.status || 500;
     const message = error.message || 'Something went wrong.';
@@ -39,10 +57,10 @@ app.use((error: any, req: any, res: any, next: any) => {
 })
 
 // Handle unknown routes
-app.use((req, res) => {
+app.use((_req, res) => {
     res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
+app.listen(SERVER_PORT, () => {
+    console.log(`Server running on port ${SERVER_PORT}`)
 });
