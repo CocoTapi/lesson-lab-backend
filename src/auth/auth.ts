@@ -118,6 +118,7 @@ export async function login({ email, password }: LoginInfo) {
 
 export async function oAuthLogin(){
   const authUrl = oAuth2Client.generateAuthUrl(domainRedirect);
+  console.log(authUrl)
   if(!authUrl) throw new Error ("Auth URL could not be generated");
 
   return authUrl; 

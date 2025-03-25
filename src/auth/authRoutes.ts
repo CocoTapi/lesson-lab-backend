@@ -50,22 +50,16 @@ router.post("/login", asyncHandler(async (req, res) => {
     })
 }));
 
-
-
 //create the url for google login and send it back to the frontend
 router.post("/oauth", asyncHandler(async (req, res) => {
 
-    res.header('Access-Control-Allow-Origin', `${FROTEND_URL}`); 
+    res.header('Access-Control-Allow-Origin', `${FROTEND_URL}`);
     res.header("Referrer-Policy", 'no-referrer-when-downgrade');
 
     const authUrl = await oAuthLogin();
     res.status(200).json({ authUrl });
 }));
 
-// localhost:8080/auth/google?
-// code=4%2F0AcvDMrBKyO_0nCVsvBnhbft1E7QTDmc6-aDbth7mvoGctegmbiBY51qY32CMupM98D0xgQ
-// &
-// scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=0&prompt=consent
 
 router.get("/auth/google", asyncHandler(async function (req, res) {
     const code: string = req.query.code as string;
@@ -77,32 +71,23 @@ router.get("/auth/google", asyncHandler(async function (req, res) {
 
     const password = "google";
 
-    //check if the user already login this website or not
+    // //check if the user already login this website or not
     await checkOAuthData({ email, password, first_name, last_name });
 
     //create JSON token
     const token = createJSONToken(email);
-    //console.log(token);
-    const filePath = path.join(__dirname, '../../redirect.html');
 
-    // Read in the HTML file content
-    fs.readFile(filePath, { encoding: 'utf-8' }, (err: any, htmlContent: string) => {
-        if (err) {
-            console.error('Error reading the HTML file:', err);
-            return res.status(500).send('Error loading the authentication page.');
-        }
+    // res.cookie('token', token, //TODO: figure out cookies cross-domain
+    //     {
+    //         sameSite: 'none',   // Required for cross-site requests 
+    //         httpOnly: true, secure: true, maxAge: 300000,
+    //         domain: `${process.env.FRONTEND_URL}`
+          
+    //     }
+    // ); // Add 'secure: true' in production over HTTPS
 
-        // Replace the placeholder with the actual token
-        const updatedHtmlContent = htmlContent.replace('RETRIEVED_ID_TOKEN', token);
+    res.redirect(`${process.env.FRONTEND_URL}${process.env.SUB_URL}?token=${token}`);
 
-        // Send the modified HTML content as the response
-        res.send(updatedHtmlContent);
-    });
-    // res.send(`<script>window.opener.postMessage({ token: '${token}' }, window.origin); window.close();</script>`);
-    // res.status(200).json({
-    //     message: "Success",
-    //     token: "1345rhgdfjhgav4yug1q4hetkqh345y134thqekrjhvgtkq3h5"
-    // })
 }))
 
 

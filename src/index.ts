@@ -11,8 +11,8 @@ const app = express();
 const SERVER_PORT = process.env.SERVER_PORT;
 
 const allowedOrigins = [
-    'http://localhost:3000', // Development origin
-    'https://cocotapi.github.io', // Production origin
+    process.env.FRONTEND_URL,
+    `${process.env.FRONTEND_URL}/${process.env.SUB_URL}`
 ];
 
 const corsOptions = {
@@ -24,23 +24,25 @@ const corsOptions = {
         }
     },
     credentials: true, // Enable sending of cookies
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 //CORS middleware
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    // Handle preflight requests
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-    } else {
-        next();
-    }
-});
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', `${process.env.FRONTEND_URL}`);
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+//     // Handle preflight requests
+//     if (req.method === 'OPTIONS') {
+//         res.status(200).end();
+//     } else {
+//         next();
+//     }
+// });
 
 app.use(authRoutes);
 app.use('/activities', activityRoutes);
