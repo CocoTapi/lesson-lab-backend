@@ -65,26 +65,19 @@ router.get("/auth/google", asyncHandler(async function (req, res) {
     const code: string = req.query.code as string;
     if (!code) res.status(400).json({ message: 'Authorization code is missing' });
 
+    // Generate token using code from google
     const tokens = await generateTokens(code);
 
+    // Get user data from google
     const { email, first_name, last_name } = await getUserDataFromGoogle(tokens.id_token);
 
     const password = "google";
 
-    // //check if the user already login this website or not
+    //check if the user already login this website or not
     await checkOAuthData({ email, password, first_name, last_name });
 
     //create JSON token
     const token = createJSONToken(email);
-
-    // res.cookie('token', token, //TODO: figure out cookies cross-domain
-    //     {
-    //         sameSite: 'none',   // Required for cross-site requests 
-    //         httpOnly: true, secure: true, maxAge: 300000,
-    //         domain: `${process.env.FRONTEND_URL}`
-          
-    //     }
-    // ); // Add 'secure: true' in production over HTTPS
 
     res.redirect(`${process.env.FRONTEND_URL}${process.env.SUB_URL}?token=${token}`);
 
